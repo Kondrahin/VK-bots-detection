@@ -92,7 +92,6 @@ class CreateFeatures:
                     self.df.at[index, f"{bool_column}_bool"] = 1
 
     def _create_relative_in_friends_bool_feature(self, index, row):
-        # [{'type': 'sibling', 'id': 137792729}, {'type': 'sibling', 'id': 21573619}]
         self.df.at[index, "relatives_in_friends_bool"] = 0
         if (
             type(row["relatives"]) is not float
@@ -107,7 +106,6 @@ class CreateFeatures:
                 self.df.at[index, "relatives_in_friends_bool"] = 1
 
     def _create_partner_in_friends_bool_feature(self, index, row):
-        # {'id': 277503415, 'first_name': 'Оля', 'last_name': 'Абраменко'}
         self.df.at[index, "partner_in_friends_bool"] = 0
         if (
             type(row["relation_partner"]) is not float

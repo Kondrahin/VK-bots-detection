@@ -2,8 +2,9 @@ import ast
 
 import numpy as np
 import pandas as pd
+import math
 
-from create_features import BOOL_COLUMNS
+from app.create_features import BOOL_COLUMNS
 
 FEATURE_COLUMNS = [
     "has_photo",
@@ -96,8 +97,6 @@ class Preprocessing:
                     self.df.at[index, c] = np.nan
 
     def _delete_zeros_in_columns(self):
-        # zero_columns = ["university", "faculty", "graduation", "relation", "interests","books", "tv" ,"quotes","about" ,"games","movies","activities","music"]
-        # columns = df.columns.tolist()
         for index, row in self.df.iterrows():
             for c in BOOL_COLUMNS:
                 if row[c] == 0.0 or row[c] == "":
@@ -116,12 +115,15 @@ class Preprocessing:
         for index, row in self.df.iterrows():
             counters = row["counters"]
             for field in COUNTERS_COLUMNS:
-                self.df.at[index, f"{field}_count"] = ast.literal_eval(counters)[field]
+                if not math.isnan(counters):
+                    self.df.at[index, f"{field}_count"] = ast.literal_eval(counters)[field]
+                else:
+                    self.df.at[index, f"{field}_count"] = 0
 
     def preprocessing(self) -> pd.DataFrame:
         self._deactivated_column_to_int()
         self._delete_empty_lists_in_df()
         self._delete_zeros_in_columns()
-        self._counters_dict_to_features()  # TODO почему то нет столбца counters
+        self._counters_dict_to_features()
 
         return self.df
